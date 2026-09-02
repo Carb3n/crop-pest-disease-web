@@ -74,7 +74,7 @@ with tab_pest:
         with st.spinner("Running detection..."):
             annotated, detections = run_pest_detection(image, conf_threshold)
 
-        st.image(annotated, caption="Detections", width="stretch")
+        st.image(annotated, caption="Detections", width=700)
 
         if detections:
             st.write("**Detected pests:**")
@@ -91,7 +91,7 @@ with tab_disease:
 
     if disease_file is not None:
         image = Image.open(disease_file).convert("RGB")
-        st.image(image, caption="Uploaded image", width="stretch")
+        st.image(image, caption="Uploaded image", width=700)
 
         with st.spinner("Classifying..."):
             top_preds = run_disease_classification(image, top_k=3)
