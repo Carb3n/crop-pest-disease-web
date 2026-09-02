@@ -110,7 +110,7 @@ with tab_pest:
     pest_file = st.file_uploader("Upload image", type=["jpg", "jpeg", "png"], key="pest_upload")
 
     if pest_file is not None:
-        image = Image.open(pest_file)
+        image = Image.open(pest_file).convert("RGB")
         with st.spinner("Running detection..."):
             annotated, detections = run_pest_detection(image, conf_threshold)
 
@@ -130,7 +130,7 @@ with tab_disease:
     disease_file = st.file_uploader("Upload image", type=["jpg", "jpeg", "png"], key="disease_upload")
 
     if disease_file is not None:
-        image = Image.open(disease_file)
+        image = Image.open(disease_file).convert("RGB")
         st.image(image, caption="Uploaded image", use_container_width=True)
 
         with st.spinner("Classifying..."):
