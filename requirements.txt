@@ -1,13 +1,10 @@
-# Pin these to whatever versions you tested locally before deploying.
-# Version drift between local and Streamlit Cloud is the #1 cause of
-# deploy-time failures (this is what bit the CarDekho Streamlit attempt).
-
+﻿# Pinned for Python 3.11 on Streamlit Community Cloud
 streamlit==1.38.0
 numpy==1.26.4
 Pillow==10.4.0
 
-# CPU-only build — full 'tensorflow' will bloat the image and risk
-# hitting Streamlit Community Cloud's 1GB RAM ceiling on cold start.
+# CPU-only TensorFlow — compatible with Python 3.11
+# tensorflow-cpu 2.17.0 requires Python >=3.9,<3.13
 tensorflow-cpu==2.17.0
 
 ultralytics==8.2.103
