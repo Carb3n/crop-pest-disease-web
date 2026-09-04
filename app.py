@@ -116,6 +116,10 @@ with tab_disease:
         "(48 classes, PlantVillage + Wheat taxonomy)."
     )
 
+    disease_conf_threshold = st.slider(
+        "Confidence threshold", 0.05, 0.95, 0.40, 0.05, key="disease_conf"
+    )
+
     disease_file = st.file_uploader(
         "Upload image", type=["jpg", "jpeg", "png"], key="disease_upload"
     )
@@ -127,11 +131,18 @@ with tab_disease:
         with st.spinner("Classifying..."):
             top_preds = run_disease_classification(image, top_k=3)
 
+        top_label, top_conf = top_preds[0]
+        if top_conf < disease_conf_threshold:
+            st.warning(
+                f"Low confidence ({top_conf:.1%}) — this may not be a "
+                "supported crop/disease. Results may be unreliable."
+            )
+
         st.write("**Top predictions:**")
         for label, conf in top_preds:
             crop, _, condition = label.partition("___")
             condition = condition.replace("_", " ")
-            st.write(f"- **{crop}** \u2014 {condition} ({conf:.1%})")
+            st.write(f"- **{crop}** — {condition} ({conf:.1%})")
 
 st.divider()
 st.caption(
