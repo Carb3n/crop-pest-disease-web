@@ -9,8 +9,8 @@ st.set_page_config(
 )
 
 PEST_MODEL_PATH = "models/pest/best.pt"
-DISEASE_MODEL_PATH = "models/disease/plant_disease_efficientnet_best.keras"
-DISEASE_CLASSES_PATH = "models/disease/plant_disease_class_names.npy"
+DISEASE_MODEL_PATH = "models/disease/plant_disease_efficientnet_v2_best.keras"
+DISEASE_CLASSES_PATH = "models/disease/plant_disease_class_names_v2.npy"
 DISEASE_IMG_SIZE = (224, 224)
 
 
@@ -55,23 +55,19 @@ def run_disease_classification(image: Image.Image, top_k: int = 3):
     model = load_disease_model()
     class_names = load_disease_class_names()
 
-    # --- FIX: Correct preprocessing for EfficientNet ---
-    # 1. Resize to the model's expected input size
+
     img = image.convert("RGB").resize(DISEASE_IMG_SIZE)
 
-    # 2. Convert to float32 array (pixel values 0-255, NOT divided by 255)
+
     arr = np.array(img, dtype=np.float32)
 
-    # 3. Apply EfficientNet-specific preprocessing
-    #    This scales pixels from [0, 255] to [-1, 1] range which is what
-    #    EfficientNet was trained with. The old code divided by 255 giving
-    #    [0, 1] range which caused the model to always predict the same class.
+
     arr = tf.keras.applications.efficientnet.preprocess_input(arr)
 
-    # 4. Add batch dimension
+
     arr = np.expand_dims(arr, axis=0)
 
-    # 5. Run prediction
+
     preds = model.predict(arr, verbose=0)[0]
     top_indices = preds.argsort()[-top_k:][::-1]
 
@@ -117,7 +113,7 @@ with tab_disease:
     st.subheader("Plant Disease Classification")
     st.write(
         "Upload a leaf image to classify the plant disease "
-        "(38 classes, PlantVillage taxonomy)."
+        "(48 classes, PlantVillage + Wheat taxonomy)."
     )
 
     disease_file = st.file_uploader(
